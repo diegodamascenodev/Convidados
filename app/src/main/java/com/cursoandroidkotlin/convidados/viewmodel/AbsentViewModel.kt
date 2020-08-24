@@ -1,4 +1,4 @@
-package com.cursoandroidkotlin.convidados.ui.slideshow
+package com.cursoandroidkotlin.convidados.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
