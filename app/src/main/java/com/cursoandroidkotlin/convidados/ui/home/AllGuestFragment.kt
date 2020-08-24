@@ -1,4 +1,4 @@
-package com.cursoandroidkotlin.convidados.ui.gallery
+package com.cursoandroidkotlin.convidados.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,19 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.cursoandroidkotlin.convidados.R
 
-class GalleryFragment : Fragment() {
+class AllGuestFragment : Fragment() {
 
-    private lateinit var galleryViewModel: GalleryViewModel
+    private lateinit var allGuestViewModel: AllGuestViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        galleryViewModel =
-                ViewModelProviders.of(this).get(GalleryViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
-        val textView: TextView = root.findViewById(R.id.text_gallery)
-        galleryViewModel.text.observe(viewLifecycleOwner, Observer {
+        allGuestViewModel = ViewModelProviders.of(this).get(AllGuestViewModel::class.java)
+        val root = inflater.inflate(R.layout.fragment_home, container, false)
+        val textView: TextView = root.findViewById(R.id.text_home)
+        allGuestViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
