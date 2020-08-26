@@ -46,15 +46,30 @@ class GuestRepository private constructor(context: Context){
 
             val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?"                             //Quem é o ponto de interrogação? É o valor da variavel "args", definida na linha de baixo
             val args = arrayOf(guest.id.toString())
+
             db.update(DataBaseConstants.GUEST.TABLE_NAME, contentValues, selection, args)
+
             return true
+
         } catch (e: Exception) {
             return false
         }
     }
 
-    fun delete(guest: GuestModel) {
+    fun delete(guest: GuestModel) : Boolean {
+        try{
+            val db = mGuestDataBaseHelper.writableDatabase
 
+            val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?"                             //Quem é o ponto de interrogação? É o valor da variavel "args", definida na linha de baixo
+            val args = arrayOf(guest.id.toString())
+
+            db.delete(DataBaseConstants.GUEST.TABLE_NAME, selection, args)
+
+            return true
+
+        } catch (e: Exception) {
+            return false
+        }
     }
 
     fun getAll(): List<GuestModel> {
