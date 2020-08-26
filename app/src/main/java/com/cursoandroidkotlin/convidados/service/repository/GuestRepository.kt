@@ -1,8 +1,22 @@
 package com.cursoandroidkotlin.convidados.service.repository
 
+import android.content.Context
 import com.cursoandroidkotlin.convidados.service.model.GuestModel
 
-class GuestRepository {
+class GuestRepository private constructor(context: Context){
+
+    private var mGuestDataBaseHelper: GuestDataBaseHelper = GuestDataBaseHelper(context)
+
+    companion object {
+        private lateinit var repository: GuestRepository
+
+        fun getInstance(context: Context) : GuestRepository {
+            if (!::repository.isInitialized){                                                       //Se o repositorio NÃO foi inicializado
+                repository = GuestRepository(context)                                               //Inicializando o repositorio
+            }
+            return repository
+        }
+    }
 
     fun save(guest: GuestModel) {
 
