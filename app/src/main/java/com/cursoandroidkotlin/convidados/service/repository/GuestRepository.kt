@@ -34,7 +34,6 @@ class GuestRepository private constructor(context: Context){
         } catch (e: Exception) {
             return false
         }
-
     }
 
     fun update(guest: GuestModel) {
