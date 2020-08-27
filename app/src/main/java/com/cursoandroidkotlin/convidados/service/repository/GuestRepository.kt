@@ -120,8 +120,51 @@ class GuestRepository private constructor(context: Context){
     }
 
     fun getAll(): List<GuestModel> {
+
         var list: MutableList<GuestModel> = ArrayList()
-        return list
+
+        try{
+            val db = mGuestDataBaseHelper.readableDatabase
+
+            /*********** QUERY SQL MAIS SEGURA USANDO A FUNÇÃO query() *************/
+
+            val columns = arrayOf(
+                DataBaseConstants.GUEST.COLUMNS.ID,
+                DataBaseConstants.GUEST.TABLE_NAME,
+                DataBaseConstants.GUEST.COLUMNS.PRESENCE)
+
+            val cursor = db.query(
+                DataBaseConstants.GUEST.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                null)
+            /************************************************************************/
+
+            /********** QUERY SQL MENOS SEGURA USANDO A FUNÇÃO rawQuery() ***********/
+            /*                                                                      */
+            /* val cursor = db.rawQuery("SELECT id, name , presence FROM Guest WHERE presence = 1", null) */
+            /************************************************************************/
+
+            if (cursor != null && cursor.count > 0) {
+                while (cursor.moveToNext()){
+                    val id = cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.ID))
+                    val name = cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME))
+                    val presence = (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
+
+                    val guest = GuestModel(id, name, presence)
+                    list.add(guest)
+                }
+            }
+            cursor?.close()
+
+            return list
+
+        } catch (e: Exception) {
+            return list
+        }
     }
 
     fun getPresent(): List<GuestModel> {
@@ -131,6 +174,48 @@ class GuestRepository private constructor(context: Context){
 
     fun getAbsent(): List<GuestModel> {
         var list: MutableList<GuestModel> = ArrayList()
-        return list
+
+        try{
+            val db = mGuestDataBaseHelper.readableDatabase
+
+            /*********** QUERY SQL MAIS SEGURA USANDO A FUNÇÃO query() *************/
+
+            val columns = arrayOf(
+                DataBaseConstants.GUEST.COLUMNS.ID,
+                DataBaseConstants.GUEST.TABLE_NAME,
+                DataBaseConstants.GUEST.COLUMNS.PRESENCE)
+
+            val cursor = db.query(
+                DataBaseConstants.GUEST.TABLE_NAME,
+                columns,
+                null,
+                null,
+                null,
+                null,
+                null)
+            /************************************************************************/
+
+            /********** QUERY SQL MENOS SEGURA USANDO A FUNÇÃO rawQuery() ***********/
+            /*                                                                      */
+            /* val cursor = db.rawQuery("SELECT id, name , presence FROM Guest WHERE presence = 0", null) */
+            /************************************************************************/
+
+            if (cursor != null && cursor.count > 0) {
+                while (cursor.moveToNext()){
+                    val id = cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.ID))
+                    val name = cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME))
+                    val absent = (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 0)
+
+                    val guest = GuestModel(id, name, absent)
+                    list.add(guest)
+                }
+            }
+            cursor?.close()
+
+            return list
+
+        } catch (e: Exception) {
+            return list
+        }
     }
 }
