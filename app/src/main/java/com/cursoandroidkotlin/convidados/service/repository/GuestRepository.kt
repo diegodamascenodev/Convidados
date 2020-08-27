@@ -72,6 +72,53 @@ class GuestRepository private constructor(context: Context){
         }
     }
 
+    fun get(id: Int) : GuestModel?{
+
+        var guest: GuestModel? = null
+
+        try{
+            val db = mGuestDataBaseHelper.readableDatabase
+
+            /*********** QUERY SQL MAIS SEGURA USANDO A FUNÇÃO query() *************/
+
+            val columns = arrayOf(DataBaseConstants.GUEST.TABLE_NAME,
+                                     DataBaseConstants.GUEST.COLUMNS.PRESENCE)
+
+            val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?"                             //Quem é o ponto de interrogação? É o valor da variavel "args", definida na linha de baixo
+            val args = arrayOf(id.toString())
+
+            val cursor = db.query(
+                DataBaseConstants.GUEST.TABLE_NAME,
+                columns,
+                selection,
+                args,
+                null,
+                null,
+                null)
+            /************************************************************************/
+
+            /********** QUERY SQL MENOS SEGURA USANDO A FUNÇÃO rawQuery() ***********/
+            /*                                                                      */
+            /* val cursor = db.rawQuery("select * from Guest where id = $id", null) */
+            /************************************************************************/
+
+            if (cursor != null && cursor.count > 0) {
+                cursor.moveToFirst()
+                val name = cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME))
+                val presence = (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
+
+                guest = GuestModel(id, name, presence)
+            }
+
+            cursor?.close()
+
+            return guest
+
+        } catch (e: Exception) {
+            return guest
+        }
+    }
+
     fun getAll(): List<GuestModel> {
         var list: MutableList<GuestModel> = ArrayList()
         return list
