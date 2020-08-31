@@ -130,7 +130,7 @@ class GuestRepository private constructor(context: Context){
 
             val columns = arrayOf(
                 DataBaseConstants.GUEST.COLUMNS.ID,
-                DataBaseConstants.GUEST.TABLE_NAME,
+                DataBaseConstants.GUEST.COLUMNS.NAME,
                 DataBaseConstants.GUEST.COLUMNS.PRESENCE)
 
             val cursor = db.query(
