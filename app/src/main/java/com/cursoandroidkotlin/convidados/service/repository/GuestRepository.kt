@@ -81,7 +81,7 @@ class GuestRepository private constructor(context: Context){
 
             /*********** QUERY SQL MAIS SEGURA USANDO A FUNÇÃO query() *************/
 
-            val columns = arrayOf(DataBaseConstants.GUEST.TABLE_NAME,
+            val columns = arrayOf(DataBaseConstants.GUEST.COLUMNS.NAME,
                                      DataBaseConstants.GUEST.COLUMNS.PRESENCE)
 
             val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?"                             //Quem é o ponto de interrogação? É o valor da variavel "args", definida na linha de baixo
