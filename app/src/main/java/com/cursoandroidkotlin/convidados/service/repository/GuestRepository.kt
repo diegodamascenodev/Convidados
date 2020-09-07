@@ -2,6 +2,7 @@ package com.cursoandroidkotlin.convidados.service.repository
 
 import android.content.ContentValues
 import android.content.Context
+import android.widget.Toast
 import com.cursoandroidkotlin.convidados.service.constants.DataBaseConstants
 import com.cursoandroidkotlin.convidados.service.model.GuestModel
 import java.lang.Exception
@@ -56,15 +57,15 @@ class GuestRepository private constructor(context: Context){
         }
     }
 
-    fun delete(guest: GuestModel) : Boolean {
+    fun delete(id: Int) : Boolean {
         try{
             val db = mGuestDataBaseHelper.writableDatabase
 
             val selection = DataBaseConstants.GUEST.COLUMNS.ID + " = ?"                             //Quem é o ponto de interrogação? É o valor da variavel "args", definida na linha de baixo
-            val args = arrayOf(guest.id.toString())
+            val args = arrayOf(id.toString())
 
             db.delete(DataBaseConstants.GUEST.TABLE_NAME, selection, args)
-
+            
             return true
 
         } catch (e: Exception) {
