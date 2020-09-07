@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.activity_guest_form.*
 class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mViewModel: GuestFormViewModel
+    private var mGuestId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,31 +25,25 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
         setListeners()
         observe()
         loadData()
+
+        radio_presence.isChecked = true
     }
 
-    private fun loadData() {
-        val bundle = intent.extras
-        if (bundle != null) {
-            val id = bundle.getInt(GuestContants.GUESTID)
-            mViewModel.load(id)
-        }
-    }
-
-    private fun setListeners(){
+    private fun setListeners() {
         button_save.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
         val id = v.id
-        if (id == R.id.button_save){
+        if (id == R.id.button_save) {
             val name = edit_name.text.toString()
             val presence = radio_presence.isChecked
-            mViewModel.save(name, presence)
+            mViewModel.save(mGuestId, name, presence)
         }
     }
 
     private fun observe() {
-        mViewModel.saveGuest.observe(this,Observer {
+        mViewModel.saveGuest.observe(this, Observer {
             if (it) {
                 Toast.makeText(applicationContext, "Sucesso", Toast.LENGTH_SHORT).show()
             } else {
@@ -65,6 +60,14 @@ class GuestFormActivity : AppCompatActivity(), View.OnClickListener {
                 radio_absent.isChecked = true
             }
         })
+    }
+
+    private fun loadData() {
+        val bundle = intent.extras
+        if (bundle != null) {
+            mGuestId = bundle.getInt(GuestContants.GUESTID)
+            mViewModel.load(mGuestId)
+        }
     }
 }
 
