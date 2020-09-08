@@ -14,16 +14,16 @@ import com.cursoandroidkotlin.convidados.R
 import com.cursoandroidkotlin.convidados.service.constants.GuestContants
 import com.cursoandroidkotlin.convidados.view.adapter.GuestAdapter
 import com.cursoandroidkotlin.convidados.view.listener.GuestListener
-import com.cursoandroidkotlin.convidados.viewmodel.AllGuestViewModel
+import com.cursoandroidkotlin.convidados.viewmodel.GuestsViewModel
 
 class AllGuestFragment : Fragment() {
 
-    private lateinit var mViewModel: AllGuestViewModel
+    private lateinit var mViewModel: GuestsViewModel
     private val mAdapter : GuestAdapter = GuestAdapter()
     private lateinit var mListener: GuestListener
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        mViewModel = ViewModelProvider(this).get(AllGuestViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(GuestsViewModel::class.java)
 
         val root = inflater.inflate(R.layout.fragment_all, container, false)
 
@@ -49,7 +49,7 @@ class AllGuestFragment : Fragment() {
 
             override fun onDelete(id: Int) {
                 mViewModel.delete(id)
-                mViewModel.load()
+                mViewModel.load(GuestContants.FILTER.EMPTY)
             }
         }
 
@@ -57,14 +57,14 @@ class AllGuestFragment : Fragment() {
 
         observer()
 
-        mViewModel.load()
+        mViewModel.load((GuestContants.FILTER.EMPTY))
 
         return root
     }
 
     override fun onResume() {
         super.onResume()
-        mViewModel.load()
+        mViewModel.load(GuestContants.FILTER.EMPTY)
     }
 
     private fun observer() {

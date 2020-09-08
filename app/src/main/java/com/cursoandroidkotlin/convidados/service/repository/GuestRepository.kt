@@ -170,27 +170,24 @@ class GuestRepository private constructor(context: Context){
 
     fun getPresent(): List<GuestModel> {
         var list: MutableList<GuestModel> = ArrayList()
-        return list
-    }
-
-    fun getAbsent(): List<GuestModel> {
-        var list: MutableList<GuestModel> = ArrayList()
 
         try{
             val db = mGuestDataBaseHelper.readableDatabase
 
             /*********** QUERY SQL MAIS SEGURA USANDO A FUNÇÃO query() *************/
 
-            val columns = arrayOf(
-                DataBaseConstants.GUEST.COLUMNS.ID,
-                DataBaseConstants.GUEST.TABLE_NAME,
+            val columns = arrayOf(DataBaseConstants.GUEST.COLUMNS.ID,
+                DataBaseConstants.GUEST.COLUMNS.NAME,
                 DataBaseConstants.GUEST.COLUMNS.PRESENCE)
+
+            val selection = DataBaseConstants.GUEST.COLUMNS.PRESENCE + " = ?"                             //Quem é o ponto de interrogação? É o valor da variavel "args", definida na linha de baixo
+            val args = arrayOf("1")
 
             val cursor = db.query(
                 DataBaseConstants.GUEST.TABLE_NAME,
                 columns,
-                null,
-                null,
+                selection,
+                args,
                 null,
                 null,
                 null)
@@ -205,7 +202,57 @@ class GuestRepository private constructor(context: Context){
                 while (cursor.moveToNext()){
                     val id = cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.ID))
                     val name = cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME))
-                    val absent = (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 0)
+                    val present = (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
+
+                    val guest = GuestModel(id, name, present)
+                    list.add(guest)
+                }
+            }
+            cursor?.close()
+
+            return list
+
+        } catch (e: Exception) {
+            return list
+        }
+    }
+
+    fun getAbsent(): List<GuestModel> {
+        var list: MutableList<GuestModel> = ArrayList()
+
+        try{
+            val db = mGuestDataBaseHelper.readableDatabase
+
+            /*********** QUERY SQL MAIS SEGURA USANDO A FUNÇÃO query() *************/
+
+            val columns = arrayOf(
+                DataBaseConstants.GUEST.COLUMNS.ID,
+                DataBaseConstants.GUEST.COLUMNS.NAME,
+                DataBaseConstants.GUEST.COLUMNS.PRESENCE)
+
+            val selection = DataBaseConstants.GUEST.COLUMNS.PRESENCE + " = ?"                             //Quem é o ponto de interrogação? É o valor da variavel "args", definida na linha de baixo
+            val args = arrayOf("0")
+
+            val cursor = db.query(
+                DataBaseConstants.GUEST.TABLE_NAME,
+                columns,
+                selection,
+                args,
+                null,
+                null,
+                null)
+            /************************************************************************/
+
+            /********** QUERY SQL MENOS SEGURA USANDO A FUNÇÃO rawQuery() ***********/
+            /*                                                                      */
+            /* val cursor = db.rawQuery("SELECT id, name , presence FROM Guest WHERE presence = 0", null) */
+            /************************************************************************/
+
+            if (cursor != null && cursor.count > 0) {
+                while (cursor.moveToNext()){
+                    val id = cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.ID))
+                    val name = cursor.getString(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.NAME))
+                    val absent = (cursor.getInt(cursor.getColumnIndex(DataBaseConstants.GUEST.COLUMNS.PRESENCE)) == 1)
 
                     val guest = GuestModel(id, name, absent)
                     list.add(guest)
