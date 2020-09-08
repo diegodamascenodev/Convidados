@@ -11,7 +11,7 @@ import com.cursoandroidkotlin.convidados.service.repository.GuestRepository
 class GuestFormViewModel(application: Application) : AndroidViewModel(application) {
 
     private val mContext = application.applicationContext
-    private val mGuestRepository: GuestRepository = GuestRepository.getInstance(mContext)
+    private val mGuestRepository: GuestRepository = GuestRepository(mContext)
 
     private var mSaveGuest = MutableLiveData<Boolean>()
     val saveGuest: LiveData<Boolean> = mSaveGuest
@@ -21,7 +21,19 @@ class GuestFormViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     fun save(id: Int, name: String, presence: Boolean) {
-        val guest = GuestModel(id, name, presence)
+        val guest = GuestModel().apply {
+            this.id = id
+            this.name = name
+            this.presence = presence
+        }
+
+        // O CODIGO ACIMA É A MESMA COISA QUE O CODIGO ABAIXO
+        /*
+         val guest = GuestModel()
+            guest.id = id
+            guest.name = name
+            guest.presence = presence
+        */
 
         if (id == 0){
             mSaveGuest.value = mGuestRepository.save(guest)
